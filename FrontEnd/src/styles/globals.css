@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg: #0f0f11;
+  --color-surface: #17171a;
+  --color-border: #2a2a30;
+  --color-muted: #6b7280;
+  --color-text: #e4e4e7;
+  --color-accent: #6366f1;
+  --color-accent-dim: #312e81;
+  --color-danger: #ef4444;
+  --color-success: #22c55e;
+  --color-code-bg: #0d0d0f;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #0f0f11;
+  color: #e4e4e7;
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+}
+
+/* Custom thin scrollbar for code blocks */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #2a2a30 transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  height: 4px;
+  width: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #2a2a30;
+  border-radius: 9999px;
+}
+
+/* Focus-visible ring offset on dark bg */
+.ring-offset-bg {
+  --tw-ring-offset-color: #0f0f11;
+}
+
+/* Touch pan for code blocks on mobile */
+.touch-pan-x {
+  touch-action: pan-x;
+}
+
+/* ─── VS Code-style scrollbar for code blocks ────────────────────────────── */
+/* Used by CodeBlock's overflow-x container. */
+.vscode-scrollbar::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+.vscode-scrollbar::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+
+.vscode-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #3e3e42;
+  border-radius: 3px;
+}
+
+.vscode-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #555558;
+}
+
+/* Fira Code ligature support — applied globally on font-mono elements */
+.font-mono,
+pre,
+code {
+  font-feature-settings: "liga" 1, "calt" 1;
+}
