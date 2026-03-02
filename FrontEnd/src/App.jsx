@@ -9,6 +9,8 @@ import HomePage from "./pages/HomePage";
 import ExplorePage from "./pages/ExplorePage";
 import PostDetailPage from "./pages/PostDetailPage";
 import SubmitPage from "./pages/SubmitPage";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
 
 // Lazy-loaded heavy pages
 const CommunityPage = lazy(() => import("./pages/CommunityPage"));
@@ -57,6 +59,8 @@ export default function App() {
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
             <Route path="/explore" element={<ExplorePage />} />
             <Route path="/post/:id" element={<PostDetailPage />} />
             <Route path="/submit" element={<SubmitPage />} />

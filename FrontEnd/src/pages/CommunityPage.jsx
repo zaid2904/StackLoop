@@ -8,7 +8,6 @@ import { FeedFilter } from "../components/post/FeedFilter";
 import { CommunityIcon } from "../components/primitives/CommunityIcon";
 import { mockPosts, communities } from "../data/mockPosts";
 import { formatCount } from "../utils/formatCount";
-import { useFeedStore } from "../store/feedStore";
 
 /**
  * CommunityPage — community header + filtered post feed.
@@ -16,17 +15,9 @@ import { useFeedStore } from "../store/feedStore";
  */
 export default function CommunityPage() {
   const { name } = useParams();
-  const { filter } = useFeedStore();
   const community = communities.find((c) => c.name === name);
 
-  const posts = mockPosts
-    .filter((p) => p.community === name)
-    .sort((a, b) => {
-      if (filter === "new")
-        return new Date(b.createdAt) - new Date(a.createdAt);
-      if (filter === "top") return b.votes - a.votes;
-      return b.votes + b.commentCount * 2 - (a.votes + a.commentCount * 2);
-    });
+  const posts = mockPosts.filter((p) => p.community === name);
 
   if (!community) {
     return (

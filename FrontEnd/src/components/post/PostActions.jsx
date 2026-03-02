@@ -1,6 +1,4 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { cn } from "../../utils/cn";
 import { Tooltip } from "../primitives/Tooltip";
 import { formatCount } from "../../utils/formatCount";
 
@@ -12,21 +10,6 @@ import { formatCount } from "../../utils/formatCount";
  * @param {number} props.commentCount
  */
 export function PostActions({ postId, commentCount }) {
-  const [bookmarked, setBookmarked] = useState(false);
-  const [shared, setShared] = useState(false);
-
-  const handleShare = async () => {
-    try {
-      await navigator.clipboard.writeText(
-        `${window.location.origin}/post/${postId}`,
-      );
-      setShared(true);
-      setTimeout(() => setShared(false), 2000);
-    } catch {
-      // Silent fail
-    }
-  };
-
   return (
     <footer className="flex items-center gap-1 flex-wrap">
       <Tooltip label="View comments">
@@ -39,35 +22,24 @@ export function PostActions({ postId, commentCount }) {
         </Link>
       </Tooltip>
 
-      <Tooltip label={shared ? "Link copied!" : "Share"}>
+      <Tooltip label="Share">
         <button
-          onClick={handleShare}
+          type="button"
           aria-label="Share post"
-          className={cn(
-            "flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-sans transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
-            shared
-              ? "text-success"
-              : "text-muted hover:text-text hover:bg-surface",
-          )}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-sans transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg text-muted hover:text-text hover:bg-surface"
         >
-          {shared ? <CheckIcon /> : <ShareIcon />}
-          <span>{shared ? "Copied" : "Share"}</span>
+          <ShareIcon />
+          <span>Share</span>
         </button>
       </Tooltip>
 
-      <Tooltip label={bookmarked ? "Bookmarked" : "Bookmark"}>
+      <Tooltip label="Bookmark">
         <button
-          onClick={() => setBookmarked((b) => !b)}
-          aria-label={bookmarked ? "Remove bookmark" : "Bookmark post"}
-          aria-pressed={bookmarked}
-          className={cn(
-            "flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-sans transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
-            bookmarked
-              ? "text-accent"
-              : "text-muted hover:text-text hover:bg-surface",
-          )}
+          type="button"
+          aria-label="Bookmark post"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-sans transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg text-muted hover:text-text hover:bg-surface"
         >
-          <BookmarkIcon filled={bookmarked} />
+          <BookmarkIcon filled={false} />
         </button>
       </Tooltip>
     </footer>
@@ -133,18 +105,3 @@ function BookmarkIcon({ filled }) {
   );
 }
 
-function CheckIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M20 6 9 17l-5-5" />
-    </svg>
-  );
-}

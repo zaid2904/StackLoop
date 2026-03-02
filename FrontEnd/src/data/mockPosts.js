@@ -251,7 +251,7 @@ nav li:has(a.active) {
   },
 ];
 
-/** @type {import('../hooks/useAuth').User[]} */
+/** @type {{id: string, username: string, displayName: string, avatarUrl: string, karma: number, bio: string}[]} */
 export const mockUsers = [
   {
     id: "u7",

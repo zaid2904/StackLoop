@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { cn } from "../../../utils/cn";
 import { formatCount } from "../../../utils/formatCount";
 
@@ -17,23 +16,9 @@ export function PollBlock({
   options,
   votes,
   totalVotes,
-  userVote: initialUserVote,
+  userVote,
 }) {
-  const [userVote, setUserVote] = useState(initialUserVote);
-  const [localVotes, setLocalVotes] = useState(votes);
-  const [localTotal, setLocalTotal] = useState(totalVotes);
-
   const hasVoted = userVote !== null;
-
-  const handleVote = (optionId) => {
-    if (hasVoted) return;
-    const idx = options.findIndex((o) => o.id === optionId);
-    const updated = [...localVotes];
-    updated[idx] += 1;
-    setLocalVotes(updated);
-    setLocalTotal((t) => t + 1);
-    setUserVote(optionId);
-  };
 
   return (
     <section
@@ -47,15 +32,15 @@ export function PollBlock({
       <ul className="space-y-2">
         {options.map((option, idx) => {
           const pct =
-            localTotal > 0
-              ? Math.round((localVotes[idx] / localTotal) * 100)
+            totalVotes > 0
+              ? Math.round((votes[idx] / totalVotes) * 100)
               : 0;
           const isSelected = userVote === option.id;
 
           return (
             <li key={option.id}>
               <button
-                onClick={() => handleVote(option.id)}
+                type="button"
                 disabled={hasVoted}
                 aria-label={`Vote for: ${option.text} (${pct}%)`}
                 className={cn(
@@ -101,7 +86,7 @@ export function PollBlock({
       </ul>
 
       <p className="text-xs text-muted font-sans">
-        {formatCount(localTotal)} votes{!hasVoted && " · click to vote"}
+        {formatCount(totalVotes)} votes
       </p>
     </section>
   );

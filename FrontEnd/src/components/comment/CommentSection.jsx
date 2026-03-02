@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { CommentCard } from "./CommentCard";
 import { CommentInput } from "./CommentInput";
 import { Divider } from "../primitives/Divider";
@@ -12,21 +11,7 @@ import { formatCount } from "../../utils/formatCount";
  * @param {import('./CommentCard').Comment[]} props.initialComments
  */
 export function CommentSection({ postId, initialComments = [] }) {
-  const [comments, setComments] = useState(initialComments);
-
-  const handleAddComment = (content) => {
-    const newComment = {
-      id: `c-${Date.now()}`,
-      postId,
-      author: { id: "u1", username: "you", displayName: "You", avatarUrl: "" },
-      content,
-      votes: 1,
-      createdAt: new Date().toISOString(),
-      parentId: null,
-      replies: [],
-    };
-    setComments((prev) => [newComment, ...prev]);
-  };
+  const comments = initialComments;
 
   return (
     <section aria-labelledby="comments-heading" className="space-y-5">
@@ -40,7 +25,7 @@ export function CommentSection({ postId, initialComments = [] }) {
         <Divider className="flex-1" />
       </header>
 
-      <CommentInput onSubmit={handleAddComment} />
+      <CommentInput />
 
       <Divider />
 

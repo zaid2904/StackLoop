@@ -1,5 +1,4 @@
 import { cn } from "../../utils/cn";
-import { useVote } from "../../hooks/useVote";
 import { formatCount } from "../../utils/formatCount";
 import { Tooltip } from "../primitives/Tooltip";
 
@@ -16,10 +15,8 @@ export function VoteSystem({
   initialVote = null,
   layout = "vertical",
 }) {
-  const { count, vote, upvote, downvote } = useVote({
-    initialCount,
-    initialVote,
-  });
+  const count = initialCount;
+  const vote = initialVote;
 
   return (
     <div
@@ -30,12 +27,14 @@ export function VoteSystem({
     >
       <Tooltip label="Upvote">
         <button
-          onClick={upvote}
+          type="button"
           aria-label="Upvote"
           aria-pressed={vote === "up"}
+          disabled
           className={cn(
             "flex items-center justify-center h-8 w-8 rounded-md transition-colors duration-200 ease-out active:scale-110",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
+            "disabled:cursor-default",
             vote === "up"
               ? "text-accent bg-accent-dim"
               : "text-muted hover:text-accent hover:bg-accent-dim",
@@ -60,12 +59,14 @@ export function VoteSystem({
 
       <Tooltip label="Downvote">
         <button
-          onClick={downvote}
+          type="button"
           aria-label="Downvote"
           aria-pressed={vote === "down"}
+          disabled
           className={cn(
             "flex items-center justify-center h-8 w-8 rounded-md transition-colors duration-200 ease-out active:scale-110",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
+            "disabled:cursor-default",
             vote === "down"
               ? "text-danger bg-danger/10"
               : "text-muted hover:text-danger hover:bg-danger/10",

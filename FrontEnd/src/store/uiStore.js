@@ -1,16 +1,36 @@
-import { create } from "zustand";
+import {
+  createContext,
+  createElement,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 
-export const useUiStore = create((set) => ({
-  /** Controls global AuthModal visibility */
-  authModalOpen: false,
-  authModalTab: "login",
+const UiStoreContext = createContext(null);
 
-  openAuthModal: (tab = "login") =>
-    set({ authModalOpen: true, authModalTab: tab }),
-  closeAuthModal: () => set({ authModalOpen: false }),
+export function UiStoreProvider({ children }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  /** Left sidebar collapsed state (mobile) */
-  sidebarOpen: false,
-  setSidebarOpen: (open) => set({ sidebarOpen: open }),
-  toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
-}));
+  const toggleSidebar = () => {
+    setSidebarOpen((open) => !open);
+  };
+
+  const value = useMemo(
+    () => ({
+      sidebarOpen,
+      setSidebarOpen,
+      toggleSidebar,
+    }),
+    [sidebarOpen],
+  );
+
+  return createElement(UiStoreContext.Provider, { value }, children);
+}
+
+export function useUiStore() {
+  const context = useContext(UiStoreContext);
+  if (!context) {
+    throw new Error("useUiStore must be used within UiStoreProvider");
+  }
+  return context;
+}

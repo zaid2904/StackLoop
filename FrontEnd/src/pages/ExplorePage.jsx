@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Search, ChevronRight } from "lucide-react";
 import { Input } from "../components/primitives/Input";
@@ -13,16 +12,8 @@ import { formatCount } from "../utils/formatCount";
  * ExplorePage — search, trending tags, community directory.
  */
 export default function ExplorePage() {
-  const [query, setQuery] = useState("");
-
-  const filtered = query.trim()
-    ? mockPosts.filter(
-        (p) =>
-          p.title.toLowerCase().includes(query.toLowerCase()) ||
-          p.tags.some((t) => t.toLowerCase().includes(query.toLowerCase())) ||
-          p.community.toLowerCase().includes(query.toLowerCase()),
-      )
-    : mockPosts;
+  const query = "";
+  const filtered = mockPosts;
 
   return (
     <div className="space-y-6">
@@ -42,8 +33,8 @@ export default function ExplorePage() {
           <Input
             variant="search"
             placeholder="Search posts, tags, communities…"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            readOnly
+            defaultValue=""
             aria-label="Explore search"
           />
         </div>

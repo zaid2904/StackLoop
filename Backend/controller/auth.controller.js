@@ -1,6 +1,14 @@
 const User = require("../model/user.model.js");
 const jwt = require("jsonwebtoken");
 
+const shapeUser = (user) => ({
+  _id: user._id,
+  name: user.name || user.username,
+  username: user.username,
+  email: user.email,
+  createdAt: user.createdAt,
+});
+
 // 🔐 Generate JWT Token
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -13,7 +21,10 @@ const generateToken = (id) => {
 // ============================
 const registerUser = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { name, username, email, password } = req.body;
+    if(!username || !email || !password) {
+      return res.status(404).json({ message: "This fields are required" });
+    }
 
     const userExists = await User.findOne({ email });
 
@@ -24,15 +35,14 @@ const registerUser = async (req, res) => {
     }
 
     const user = await User.create({
+      name: (name || username || "").trim(),
       username,
       email,
       password,
     });
 
     res.status(201).json({
-      _id: user._id,
-      username: user.username,
-      email: user.email,
+      user: shapeUser(user),
       token: generateToken(user._id),
     });
   } catch (error) {
@@ -53,14 +63,13 @@ const loginUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "user not found" });
     }
-    console.log(user);
     if (password != user.password) {
       return res.status(404).json({ message: "Password is incorrect" });
     }
     const token = generateToken(user._id);
     return res
       .status(200)
-      .json({ message: "user is LoggedIn", user: user, token });
+      .json({ message: "user is LoggedIn", user: shapeUser(user), token });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

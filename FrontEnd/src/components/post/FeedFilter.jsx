@@ -1,5 +1,4 @@
 import { Flame, Zap, Trophy, TrendingUp } from "lucide-react";
-import { useFeedStore } from "../../store/feedStore";
 import { cn } from "../../utils/cn";
 
 const FILTERS = [
@@ -13,7 +12,7 @@ const FILTERS = [
  * FeedFilter — tab bar for feed sorting.
  */
 export function FeedFilter() {
-  const { filter, setFilter } = useFeedStore();
+  const activeFilter = "hot";
 
   return (
     <nav
@@ -23,12 +22,12 @@ export function FeedFilter() {
       {FILTERS.map(({ id, label, Icon }) => (
         <button
           key={id}
-          onClick={() => setFilter(id)}
-          aria-pressed={filter === id}
+          type="button"
+          aria-pressed={activeFilter === id}
           className={cn(
             "flex items-center gap-1.5 px-4 py-2 text-sm font-sans font-medium border-b-2 -mb-px transition-colors duration-200 ease-out",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg rounded-t-md",
-            filter === id
+            activeFilter === id
               ? "border-accent text-accent"
               : "border-transparent text-muted hover:text-text",
           )}

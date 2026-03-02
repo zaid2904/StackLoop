@@ -3,8 +3,6 @@ import { LeftSidebar } from "./LeftSidebar";
 import { RightSidebar } from "./RightSidebar";
 import { BottomNav } from "./BottomNav";
 import { PageContainer } from "./PageContainer";
-import { AuthModal } from "../modal/AuthModal";
-import { useUiStore } from "../../store/uiStore";
 
 /**
  * Root app layout — composes navbar, sidebars, main content area.
@@ -13,8 +11,6 @@ import { useUiStore } from "../../store/uiStore";
  * @param {React.ReactNode} props.children
  */
 export function AppLayout({ children }) {
-  const { authModalOpen, closeAuthModal, authModalTab } = useUiStore();
-
   return (
     <div className="min-h-screen bg-bg text-text font-sans">
       <Navbar />
@@ -32,10 +28,6 @@ export function AppLayout({ children }) {
       </PageContainer>
 
       <BottomNav />
-
-      {authModalOpen && (
-        <AuthModal defaultTab={authModalTab} onClose={closeAuthModal} />
-      )}
     </div>
   );
 }

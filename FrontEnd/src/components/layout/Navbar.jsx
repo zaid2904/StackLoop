@@ -1,19 +1,28 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "../primitives/Button";
 import { Input } from "../primitives/Input";
-import { Avatar } from "../primitives/Avatar";
 import { useAuthStore } from "../../store/authStore";
-import { useUiStore } from "../../store/uiStore";
-import { cn } from "../../utils/cn";
 
 /**
  * Global sticky navbar.
  */
 export function Navbar() {
-  const { user } = useAuthStore();
-  const { openAuthModal, toggleSidebar } = useUiStore();
-  const [searchVal, setSearchVal] = useState("");
+  const { user, logout } = useAuthStore();
+  const [hasToken, setHasToken] = useState(
+    () => !!localStorage.getItem("token"),
+  );
+
+  useEffect(() => {
+    setHasToken(!!localStorage.getItem("token"));
+  }, [user]);
+
+  const isLoggedIn = !!user || hasToken;
+
+  const handleLogout = () => {
+    logout();
+    setHasToken(false);
+  };
 
   return (
     <header className="sticky top-0 z-50 h-14 bg-bg border-b border-border flex items-center">
@@ -21,7 +30,7 @@ export function Navbar() {
         {/* Mobile menu toggle */}
         <button
           className="md:hidden text-muted hover:text-text transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg rounded-md p-1"
-          onClick={toggleSidebar}
+          type="button"
           aria-label="Toggle menu"
         >
           <MenuIcon />
@@ -45,47 +54,29 @@ export function Navbar() {
           <Input
             variant="search"
             placeholder="Search posts, tags, communities…"
-            value={searchVal}
-            onChange={(e) => setSearchVal(e.target.value)}
+            readOnly
+            defaultValue=""
             aria-label="Search"
           />
         </div>
 
         <div className="flex items-center gap-2 ml-auto">
-          {user ? (
-            <>
-              <Link to="/submit">
-                <Button variant="primary" size="sm">
-                  + New Post
-                </Button>
-              </Link>
-              <Link
-                to="/profile"
-                className="flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg rounded-full"
-              >
-                <Avatar
-                  size="sm"
-                  username={user.username}
-                  alt={user.displayName}
-                />
-              </Link>
-            </>
+          {isLoggedIn ? (
+            <Button variant="primary" size="sm" onClick={handleLogout}>
+              Logout
+            </Button>
           ) : (
             <>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => openAuthModal("login")}
-              >
-                Sign in
-              </Button>
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => openAuthModal("signup")}
-              >
-                Sign up
-              </Button>
+              <Link to="/login">
+                <Button variant="ghost" size="sm">
+                  Sign in
+                </Button>
+              </Link>
+              <Link to="/signup">
+                <Button variant="primary" size="sm">
+                  Sign up
+                </Button>
+              </Link>
             </>
           )}
         </div>

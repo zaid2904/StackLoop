@@ -1,18 +1,20 @@
 const connectDB = require("./config/db");
 const express = require("express");
 const dotenv = require("dotenv");
-const routes = require("./routes/auth.js");
+const authRoutes = require("./routes/auth.js");
+const profileRoutes = require("./routes/profile.js");
 const cors = require("cors");
 
 dotenv.config();
 
 const app = express();
 const PORT = 3000;
+app.use(cors({ origin: "http://localhost:5173" }));
 
 app.use(express.json());
-app.use("/api", routes);
+app.use("/api", authRoutes);
+app.use("/api/profile", profileRoutes);
 connectDB();
-app.use(cors(), require("cors"));
 
 app.get("/", (req, res) => {
   res.send("Hello World");

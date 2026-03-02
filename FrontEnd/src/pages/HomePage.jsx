@@ -1,16 +1,13 @@
 import { FeedFilter } from "../components/post/FeedFilter";
 import { PostCard } from "../components/post/PostCard";
-import { PostComposer } from "../components/post/PostComposer";
 import {
   Skeleton,
   SkeletonText,
   SkeletonAvatar,
 } from "../components/primitives/Skeleton";
-import { Divider } from "../components/primitives/Divider";
+import { Button } from "../components/primitives/Button";
+import { Input, Textarea } from "../components/primitives/Input";
 import { mockPosts } from "../data/mockPosts";
-import { useFeedStore } from "../store/feedStore";
-import { useAuthStore } from "../store/authStore";
-import { useState } from "react";
 
 function PostSkeleton() {
   return (
@@ -38,60 +35,38 @@ function PostSkeleton() {
  * HomePage — main feed with filter + posts.
  */
 export default function HomePage() {
-  const { filter } = useFeedStore();
-  const { user } = useAuthStore();
-  const [posts, setPosts] = useState(mockPosts);
-  const [isLoading] = useState(false);
-  const [showComposer, setShowComposer] = useState(false);
-
-  // Sort posts based on filter (mock logic)
-  const sortedPosts = [...posts].sort((a, b) => {
-    if (filter === "new") return new Date(b.createdAt) - new Date(a.createdAt);
-    if (filter === "top") return b.votes - a.votes;
-    if (filter === "rising") return b.commentCount - a.commentCount;
-    // hot: weighted score
-    return b.votes + b.commentCount * 2 - (a.votes + a.commentCount * 2);
-  });
-
-  const handleNewPost = ({ title, community, blocks }) => {
-    const post = {
-      id: `p${Date.now()}`,
-      author: {
-        id: user?.id ?? "u1",
-        username: user?.username ?? "anon",
-        displayName: user?.displayName ?? "Anon",
-        avatarUrl: "",
-      },
-      community,
-      title,
-      blocks,
-      votes: 1,
-      commentCount: 0,
-      createdAt: new Date().toISOString(),
-      tags: [],
-    };
-    setPosts((prev) => [post, ...prev]);
-    setShowComposer(false);
-  };
+  const posts = mockPosts;
+  const isLoading = false;
 
   return (
     <div className="space-y-4">
       {/* Composer toggle */}
-      {!showComposer && (
-        <button
-          onClick={() => setShowComposer(true)}
-          className="w-full text-left px-4 py-3 bg-surface border border-border rounded-xl text-muted text-sm font-sans hover:border-accent transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-        >
-          What's on your mind, developer?
-        </button>
-      )}
+      <button
+        type="button"
+        className="w-full text-left px-4 py-3 bg-surface border border-border rounded-xl text-muted text-sm font-sans hover:border-accent transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+      >
+        What's on your mind, developer?
+      </button>
 
-      {showComposer && (
-        <PostComposer
-          onSubmit={handleNewPost}
-          onCancel={() => setShowComposer(false)}
+      <section className="bg-surface border border-border rounded-xl p-4 space-y-4">
+        <Input value="" readOnly placeholder="Post title" aria-label="Post title" />
+        <Input value="" readOnly placeholder="Community" aria-label="Community" />
+        <Textarea
+          value=""
+          readOnly
+          rows={4}
+          placeholder="Write something..."
+          aria-label="Post content"
         />
-      )}
+        <div className="flex justify-end gap-2">
+          <Button type="button" variant="ghost" disabled>
+            Cancel
+          </Button>
+          <Button type="button" variant="primary" disabled>
+            Post
+          </Button>
+        </div>
+      </section>
 
       <FeedFilter />
 
@@ -103,7 +78,7 @@ export default function HomePage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {sortedPosts.map((post) => (
+          {posts.map((post) => (
             <PostCard key={post.id} post={post} />
           ))}
         </div>

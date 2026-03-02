@@ -6,7 +6,6 @@ import { Badge } from "../primitives/Badge";
 import { CommunityIcon } from "../primitives/CommunityIcon";
 import { communities } from "../../data/mockPosts";
 import { formatCount } from "../../utils/formatCount";
-import { useUiStore } from "../../store/uiStore";
 
 const NAV_LINKS = [
   { to: "/", label: "Home", icon: Home, exact: true },
@@ -18,28 +17,15 @@ const NAV_LINKS = [
  * Left sidebar navigation.
  */
 export function LeftSidebar() {
-  const { sidebarOpen, setSidebarOpen } = useUiStore();
-
   return (
-    <>
-      {/* Mobile backdrop */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-bg/80 md:hidden"
-          onClick={() => setSidebarOpen(false)}
-          aria-hidden="true"
-        />
+    <aside
+      className={cn(
+        "hidden md:block md:sticky md:top-20 md:h-[calc(100vh-5rem)] md:w-60 md:flex-shrink-0",
+        "overflow-y-auto",
       )}
-
-      <aside
-        className={cn(
-          "fixed top-14 left-0 h-[calc(100vh-3.5rem)] w-60 bg-bg border-r border-border z-40",
-          "overflow-y-auto transition-transform duration-200 ease-out",
-          "md:sticky md:translate-x-0 md:block",
-          sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
-        )}
-        aria-label="Primary navigation"
-      >
+      aria-label="Primary navigation"
+    >
+      <div className="border-r border-border pr-4">
         <nav className="p-4 space-y-1">
           {NAV_LINKS.map(({ to, label, icon: Icon, exact }) => (
             <NavLink
@@ -87,8 +73,8 @@ export function LeftSidebar() {
             ))}
           </ul>
         </div>
-      </aside>
-    </>
+      </div>
+    </aside>
   );
 }
 
